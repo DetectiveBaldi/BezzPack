@@ -1,0 +1,100 @@
+{
+    "items":
+    [
+        {
+            "key": "Item_Brownie",
+            
+            "value": "Brownie"
+        },
+
+        {
+            "key": "Description_Brownie",
+            
+            "value": "A classic sweet treat! Gives a LOT of stamina, but slows you down!"
+        },
+
+        {
+            "key": "BrownieSound",
+            
+            "value": "I'm eating brownies..."
+        },
+
+        {
+            "key": "BezzPosterTitle",
+
+            "value": "Bezz"
+        },
+
+        {
+            "key": "BezzPosterDescription",
+
+            "value": "The proudest student in Here School! He always tries to force his beliefs on others. Make sure to be respectful, or else..."
+        },
+
+        {
+            "key": "BezzPrompt0",
+
+            "value": "Hey! You!"
+        },
+
+        {
+            "key": "BezzPrompt1",
+
+            "value": "Wanna talk about LGBT?"
+        },
+
+        {
+            "key": "BezzEat0",
+
+            "value": "I'm eating brownies..."
+        },
+
+        {
+            "key": "BezzEat1",
+
+            "value": "..."
+        },
+
+        {
+            "key": "BezzYapping0",
+
+            "value": "In a world that often seeks to categorize and label,"
+        },
+
+        {
+            "key": "BezzYapping1",
+
+            "value": "the journey of discovering and embracing one's true self is nothing short of a remarkable act of courage."
+        },
+
+        {
+            "key": "BezzYapping2",
+
+            "value": "For many transgender individuals, this journey is a path toward authenticity, self-love, and empowerment."
+        },
+
+        {
+            "key": "BezzYapping3",
+
+            "value": "It is a story that deserves to be celebrated, highlighting the strength,"
+        },
+
+        {
+            "key": "BezzYapping4",
+
+            "value": "resilience, and beauty found within the trans community."
+        },
+
+        {
+            "key": "BezzRealization0",
+
+            "value": "Did you just walk away like a transphobe?"
+        },
+
+        {
+            "key": "BezzFurious0",
+
+            "value": "I'M CALLING THE PRINCIPAL!"
+        }
+    ]
+}
