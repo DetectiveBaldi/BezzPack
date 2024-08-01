@@ -10,8 +10,10 @@ using UnityEngine;
 
 namespace BezzPack
 {
-    [BepInPlugin("detectivebaldi.pluspacks.bezz", "Bezz Pack", "1.0.0.0")]
+    [BepInPlugin("detectivebaldi.pluspacks.bezz", "Bezz Pack", "1.1.0.0")]
+
     [BepInDependency("mtm101.rulerp.bbplus.baldidevapi")]
+
     public class BasePlugin : BaseUnityPlugin
     {
 #pragma warning disable CS8618

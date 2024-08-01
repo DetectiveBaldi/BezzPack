@@ -390,7 +390,7 @@ namespace BezzPack
 
         public float coolingTimer;
 
-        public List<SpriteRenderer> flagRenderer;
+        public List<Flag> flags;
 
         public float flagTimer;
 
@@ -402,7 +402,7 @@ namespace BezzPack
 
             flagTimer = 3.0f;
 
-            flagRenderer = new List<SpriteRenderer>();
+            flags = new List<Flag>();
         }
 
         public override void Enter()
@@ -455,17 +455,17 @@ namespace BezzPack
             {
                 flagTimer = 3.0f;
 
-                List<Cell> tiles = bezzCharacter.ec.mainHall.AllTilesNoGarbage(false, true);
+                List<Cell> cells = bezzCharacter.ec.mainHall.AllTilesNoGarbage(false, true);
 
-                SpriteRenderer flag = GameObject.Instantiate<SpriteRenderer>(bezzCharacter.spriteRenderer[0], tiles[UnityEngine.Random.Range(0, tiles.Count)].TileTransform);
+                SpriteRenderer spriteRenderer = GameObject.Instantiate<SpriteRenderer>(bezzCharacter.spriteRenderer[0], cells[UnityEngine.Random.Range(0, cells.Count)].TileTransform);
 
-                flag.sprite = BasePlugin.current.assetManagement.Get<Sprite>("Flag0");
+                spriteRenderer.sprite = BasePlugin.current.assetManagement.Get<Sprite>("Flag0");
 
-                flag.color = new Color(UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value, 1.0f);
+                spriteRenderer.color = new Color(UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value, 1.0f);
 
-                CustomSpriteAnimator animationManagement = flag.gameObject.AddComponent<CustomSpriteAnimator>();
+                CustomSpriteAnimator animationManagement = spriteRenderer.gameObject.AddComponent<CustomSpriteAnimator>();
 
-                animationManagement.spriteRenderer = flag;
+                animationManagement.spriteRenderer = spriteRenderer;
 
                 List<Sprite> idleSprites = new List<Sprite>();
 
@@ -481,9 +481,17 @@ namespace BezzPack
 
                 animationManagement.SetDefaultAnimation("Idle", 0.0f);
 
-                flag.gameObject.transform.localPosition += Vector3.up * 4.65f;
+                spriteRenderer.gameObject.transform.localPosition += Vector3.up * 4.65f;
 
-                flagRenderer.Add(flag);
+                GameObject gameObject = new GameObject();
+
+                gameObject.AddComponent<BoxCollider>();
+
+                gameObject.GetComponent<BoxCollider>().size = new Vector3(1.975f, 10.0f, 1.975f);
+
+                gameObject.transform.position = spriteRenderer.transform.position;
+
+                flags.Add(new Flag(spriteRenderer, gameObject));
             }
         }
 
@@ -495,10 +503,26 @@ namespace BezzPack
 
             bezzCharacter.animationManagement.ChangeSpeed(1.0f);
 
-            for (int i = 0; i < flagRenderer.Count; i++)
+            for (int i = 0; i < flags.Count; i++)
             {
-                flagRenderer[i].enabled = false;
+                flags[i].spriteRenderer.enabled = false;
+
+                flags[i].gameObject.GetComponent<BoxCollider>().enabled = false;
             }
+        }
+    }
+
+    public class Flag
+    {
+        public SpriteRenderer spriteRenderer;
+
+        public GameObject gameObject;
+
+        public Flag(SpriteRenderer spriteRenderer, GameObject gameObject)
+        {
+            this.spriteRenderer = spriteRenderer;
+
+            this.gameObject = gameObject;
         }
     }
 }
