@@ -10,10 +10,8 @@ using UnityEngine;
 
 namespace BezzPack
 {
-    [BepInPlugin("detectivebaldi.pluspacks.bezz", "Bezz Pack", "1.1.0.0")]
-
+    [BepInPlugin("detectivebaldi.pluspacks.bezz", "Bezz Pack", "1.1.0.1")]
     [BepInDependency("mtm101.rulerp.bbplus.baldidevapi")]
-
     public class BasePlugin : BaseUnityPlugin
     {
 #pragma warning disable CS8618
@@ -42,15 +40,10 @@ namespace BezzPack
 
             assetManagement.Add<SoundObject>("BezzEat1", ObjectCreators.CreateSoundObject(AssetLoader.AudioClipFromMod(this, "BezzEat1.wav"), "BezzEat1", SoundType.Voice, new Color(1.0f, 0.5f, 0.0f, 1.0f)));
 
-            assetManagement.Add<SoundObject>("BezzYapping0", ObjectCreators.CreateSoundObject(AssetLoader.AudioClipFromMod(this, "BezzYapping0.wav"), "BezzYapping0", SoundType.Voice, new Color(1.0f, 0.5f, 0.0f, 1.0f)));
-
-            assetManagement.Add<SoundObject>("BezzYapping1", ObjectCreators.CreateSoundObject(AssetLoader.AudioClipFromMod(this, "BezzYapping1.wav"), "BezzYapping1", SoundType.Voice, new Color(1.0f, 0.5f, 0.0f, 1.0f)));
-
-            assetManagement.Add<SoundObject>("BezzYapping2", ObjectCreators.CreateSoundObject(AssetLoader.AudioClipFromMod(this, "BezzYapping2.wav"), "BezzYapping2", SoundType.Voice, new Color(1.0f, 0.5f, 0.0f, 1.0f)));
-
-            assetManagement.Add<SoundObject>("BezzYapping3", ObjectCreators.CreateSoundObject(AssetLoader.AudioClipFromMod(this, "BezzYapping3.wav"), "BezzYapping3", SoundType.Voice, new Color(1.0f, 0.5f, 0.0f, 1.0f)));
-
-            assetManagement.Add<SoundObject>("BezzYapping4", ObjectCreators.CreateSoundObject(AssetLoader.AudioClipFromMod(this, "BezzYapping4.wav"), "BezzYapping4", SoundType.Voice, new Color(1.0f, 0.5f, 0.0f, 1.0f)));
+            for (int i = 0; i < 5; i++)
+            {
+                assetManagement.Add<SoundObject>("BezzYapping" + i, ObjectCreators.CreateSoundObject(AssetLoader.AudioClipFromMod(this, "BezzYapping" + i + ".wav"), "BezzYapping" + i, SoundType.Voice, new Color(1.0f, 0.5f, 0.0f, 1.0f)));
+            }
 
             assetManagement.Add<SoundObject>("BezzRealization0", ObjectCreators.CreateSoundObject(AssetLoader.AudioClipFromMod(this, "BezzRealization0.wav"), "BezzRealization0", SoundType.Voice, new Color(1.0f, 0.5f, 0.0f, 1.0f)));
 

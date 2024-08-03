@@ -14,23 +14,11 @@ namespace BezzPack
 
         public AudioManager audioManagement;
 
-        public SoundObject bezzPrompt0;
+        public SoundObject bezzPrompt0, bezzPrompt1;
 
-        public SoundObject bezzPrompt1;
+        public SoundObject bezzEat0, bezzEat1;
 
-        public SoundObject bezzEat0;
-
-        public SoundObject bezzEat1;
-
-        public SoundObject bezzYapping0;
-
-        public SoundObject bezzYapping1;
-
-        public SoundObject bezzYapping2;
-
-        public SoundObject bezzYapping3;
-
-        public SoundObject bezzYapping4;
+        public SoundObject bezzYapping0, bezzYapping1, bezzYapping2, bezzYapping3, bezzYapping4;
 
         public SoundObject bezzRealization0;
 
@@ -38,15 +26,7 @@ namespace BezzPack
 
         public CustomSpriteAnimator animationManagement;
 
-        public List<Sprite> idleSprites;
-
-        public List<Sprite> walkSprites;
-
-        public List<Sprite> eatSprites;
-
-        public List<Sprite> yapSprites;
-
-        public List<Sprite> furiousSprites;
+        public List<Sprite> idleSprites, walkSprites, eatSprites, yapSprites, furiousSprites;
 
 #pragma warning restore CS8618
 
