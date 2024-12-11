@@ -10,7 +10,7 @@ using UnityEngine;
 
 namespace BezzPack
 {
-    [BepInPlugin("detectivebaldi.pluspacks.bezz", "Bezz Pack", "1.1.0.1")]
+    [BepInPlugin("detectivebaldi.pluspacks.bezz", "Bezz Pack", "1.2.0.0")]
     [BepInDependency("mtm101.rulerp.bbplus.baldidevapi")]
     public class BasePlugin : BaseUnityPlugin
     {
@@ -69,11 +69,13 @@ namespace BezzPack
 
             assetManagement.Add<Sprite>("Flag1", AssetLoader.SpriteFromTexture2D(AssetLoader.TextureFromMod(this, "Flag1.png"), 31.5f));
 
-            assetManagement.Add<SoundObject>("BrownieEat0", ObjectCreators.CreateSoundObject(AssetLoader.AudioClipFromMod(this, "BrownieEat0.wav"), "Nothing", SoundType.Effect, Color.white, 0.0f));
+            assetManagement.Add<SoundObject>("BrownieEat0", ObjectCreators.CreateSoundObject(AssetLoader.AudioClipFromMod(this, "BrownieEat0.wav"), "Brownie_Crunch", SoundType.Effect, Color.white));
 
             assetManagement.Add<Sprite>("Brownie0", AssetLoader.SpriteFromTexture2D(AssetLoader.TextureFromMod(this, "Brownie0.png"), 25f));
 
             assetManagement.Add<Sprite>("Brownie1", AssetLoader.SpriteFromTexture2D(AssetLoader.TextureFromMod(this, "Brownie1.png"), 50f));
+
+            AssetLoader.LocalizationFromMod(this);
 
             LoadingEvents.RegisterOnAssetsLoaded(Info, loadCharacters, false);
 
@@ -92,7 +94,7 @@ namespace BezzPack
 
             .SetPoster(AssetLoader.TextureFromMod(this, "BezzPoster.png"), "BezzPosterTitle", "BezzPosterDescription")
 
-            .AddSpawnableRoomCategories(RoomCategory.Hall)
+            .AddSpawnableRoomCategories(RoomCategory.Class)
 
             .AddLooker()
 
@@ -110,15 +112,10 @@ namespace BezzPack
 
             bezzCharacter.bezzEat1 = assetManagement.Get<SoundObject>("BezzEat1");
 
-            bezzCharacter.bezzYapping0 = assetManagement.Get<SoundObject>("BezzYapping0");
+            bezzCharacter.bezzYapping = new SoundObject[5];
 
-            bezzCharacter.bezzYapping1 = assetManagement.Get<SoundObject>("BezzYapping1");
-
-            bezzCharacter.bezzYapping2 = assetManagement.Get<SoundObject>("BezzYapping2");
-
-            bezzCharacter.bezzYapping3 = assetManagement.Get<SoundObject>("BezzYapping3");
-
-            bezzCharacter.bezzYapping4 = assetManagement.Get<SoundObject>("BezzYapping4");
+            for (int i = 0; i < 5; i++)
+                bezzCharacter.bezzYapping[i] = assetManagement.Get<SoundObject>("BezzYapping" + i);
 
             bezzCharacter.bezzRealization0 = assetManagement.Get<SoundObject>("BezzRealization0");
 
@@ -126,13 +123,13 @@ namespace BezzPack
 
             bezzCharacter.spriteRenderer[0].sprite = assetManagement.Get<Sprite>("BezzIdle0");
 
-            bezzCharacter.animationManagement = bezzCharacter.gameObject.AddComponent<CustomSpriteAnimator>();
-
-            bezzCharacter.animationManagement.spriteRenderer = bezzCharacter.spriteRenderer[0];
-
             bezzCharacter.spriteRenderer[0].gameObject.transform.localPosition += Vector3.up / 1.075f;
 
             assetManagement.Add<BezzCharacter>("BezzCharacter", bezzCharacter);
+
+            bezzCharacter.frameController = bezzCharacter.gameObject.AddComponent<CustomSpriteAnimator>();
+
+            bezzCharacter.frameController.spriteRenderer = bezzCharacter.spriteRenderer[0];
         }
 
         public void loadItems()
@@ -158,15 +155,15 @@ namespace BezzPack
             assetManagement.Add<ItemObject>("Brownie", brownie);
         }
 
-        public void generateCallback(string lName, int lNumber, CustomLevelObject lCustomObject)
+        public void generateCallback(string lName, int lNumber, SceneObject lSceneObject)
         {
-            lCustomObject.potentialNPCs.Add(new WeightedNPC() { selection = assetManagement.Get<NPC>("BezzCharacter"), weight = 115 });
+            lSceneObject.potentialNPCs.Add(new WeightedNPC() { selection = assetManagement.Get<NPC>("BezzCharacter"), weight = 115 });
 
-            lCustomObject.potentialItems = lCustomObject.potentialItems.AddItem(new WeightedItemObject() { selection = assetManagement.Get<ItemObject>("Brownie"), weight = 150 }).ToArray();
+            lSceneObject.levelObject.potentialItems = lSceneObject.levelObject.potentialItems.AddItem(new WeightedItemObject() {selection = assetManagement.Get<ItemObject>("Brownie"), weight = 150}).ToArray();
 
-            lCustomObject.shopItems = lCustomObject.shopItems.AddItem(new WeightedItemObject() { selection = assetManagement.Get<ItemObject>("Brownie"), weight = 150 }).ToArray();
+            lSceneObject.shopItems = lSceneObject.shopItems.AddItem(new WeightedItemObject() {selection = assetManagement.Get<ItemObject>("Brownie"), weight = 150}).ToArray();
 
-            lCustomObject.MarkAsNeverUnload();
+            lSceneObject.MarkAsNeverUnload();
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using MTM101BaldAPI;
+using MTM101BaldAPI.AssetTools;
 using MTM101BaldAPI.Components;
 using MTM101BaldAPI.PlusExtensions;
 using System;
@@ -18,15 +19,13 @@ namespace BezzPack
 
         public SoundObject bezzEat0, bezzEat1;
 
-        public SoundObject bezzYapping0, bezzYapping1, bezzYapping2, bezzYapping3, bezzYapping4;
+        public SoundObject[] bezzYapping;
 
         public SoundObject bezzRealization0;
 
         public SoundObject bezzFurious0;
 
-        public CustomSpriteAnimator animationManagement;
-
-        public List<Sprite> idleSprites, walkSprites, eatSprites, yapSprites, furiousSprites;
+        public CustomSpriteAnimator frameController;
 
 #pragma warning restore CS8618
 
@@ -34,49 +33,52 @@ namespace BezzPack
         {
             base.Initialize();
 
+            LoadFrames();
+
+            frameController.ChangeSpeed(1.0f);
+
+            frameController.Play("Idle", 1.0f);
+
+            frameController.SetDefaultAnimation("Idle", 1.0f);
+
             behaviorStateMachine.ChangeState(new BezzWanderState(this, 0.0f));
+        }
 
-            idleSprites = new List<Sprite>();
+        public void LoadFrames()
+        {
+            AssetManager Assets = BasePlugin.current.assetManagement;
 
-            idleSprites.Add(BasePlugin.current.assetManagement.Get<Sprite>("BezzIdle0"));
+            List<Sprite> idleSprites = new List<Sprite>();
 
-            animationManagement.animations.Add("Idle", new CustomAnimation<Sprite>(idleSprites.ToArray(), 1.0f));
+            idleSprites.Add(Assets.Get<Sprite>("BezzIdle0"));
 
-            walkSprites = new List<Sprite>();
+            frameController.animations.Add("Idle", new CustomAnimation<Sprite>(idleSprites.ToArray(), 1.0f));
+
+            List<Sprite> walkSprites = new List<Sprite>();
 
             for (int i = 0; i < 12; i++)
-            {
-                walkSprites.Add(BasePlugin.current.assetManagement.Get<Sprite>("BezzWalk" + i));
-            }
+                walkSprites.Add(Assets.Get<Sprite>("BezzWalk" + i));
 
-            animationManagement.animations.Add("Walk", new CustomAnimation<Sprite>(walkSprites.ToArray(), 1.0f));
+            frameController.animations.Add("Walk", new CustomAnimation<Sprite>(walkSprites.ToArray(), 1.0f));
 
-            eatSprites = new List<Sprite>();
+            List<Sprite> eatSprites = new List<Sprite>();
 
-            eatSprites.Add(BasePlugin.current.assetManagement.Get<Sprite>("BezzEat0"));
+            eatSprites.Add(Assets.Get<Sprite>("BezzEat0"));
 
-            animationManagement.animations.Add("Eat", new CustomAnimation<Sprite>(eatSprites.ToArray(), 1.0f));
+            frameController.animations.Add("Eat", new CustomAnimation<Sprite>(eatSprites.ToArray(), 1.0f));
 
-            yapSprites = new List<Sprite>();
+            List<Sprite> yapSprites = new List<Sprite>();
 
             for (int i = 0; i < 2; i++)
-            {
-                yapSprites.Add(BasePlugin.current.assetManagement.Get<Sprite>("BezzYap" + i));
-            }
+                yapSprites.Add(Assets.Get<Sprite>("BezzYap" + i));
 
-            animationManagement.animations.Add("Yap", new CustomAnimation<Sprite>(yapSprites.ToArray(), 1.0f));
+            frameController.animations.Add("Yap", new CustomAnimation<Sprite>(yapSprites.ToArray(), 1.0f));
 
-            furiousSprites = new List<Sprite>();
+            List<Sprite> furiousSprites = new List<Sprite>();
 
-            furiousSprites.Add(BasePlugin.current.assetManagement.Get<Sprite>("BezzFurious0"));
+            furiousSprites.Add(Assets.Get<Sprite>("BezzFurious0"));
 
-            animationManagement.animations.Add("Furious", new CustomAnimation<Sprite>(furiousSprites.ToArray(), 1.0f));
-
-            animationManagement.ChangeSpeed(1.0f);
-
-            animationManagement.Play("Idle", 0.0f);
-
-            animationManagement.SetDefaultAnimation("Idle", 0.0f);
+            frameController.animations.Add("Furious", new CustomAnimation<Sprite>(furiousSprites.ToArray(), 1.0f));
         }
     }
 
@@ -109,11 +111,11 @@ namespace BezzPack
 
             ChangeNavigationState(new NavigationState_WanderRandom(bezzCharacter, 0));
 
-            bezzCharacter.animationManagement.ChangeSpeed(1.0f);
+            bezzCharacter.frameController.ChangeSpeed(1.0f);
 
-            bezzCharacter.animationManagement.Play("Walk", 0.0f);
+            bezzCharacter.frameController.Play("Walk", 1.0f);
 
-            bezzCharacter.animationManagement.SetDefaultAnimation("Walk", 0.0f);
+            bezzCharacter.frameController.SetDefaultAnimation("Walk", 1.0f);
         }
 
         public override void Update()
@@ -140,7 +142,7 @@ namespace BezzPack
         {
             base.Exit();
 
-            bezzCharacter.animationManagement.ChangeSpeed(1.0f);
+            bezzCharacter.frameController.ChangeSpeed(1.0f);
         }
     }
 
@@ -167,11 +169,11 @@ namespace BezzPack
 
             bezzCharacter.audioManagement.QueueAudio(bezzCharacter.bezzPrompt1);
 
-            bezzCharacter.animationManagement.ChangeSpeed(1.325f);
+            bezzCharacter.frameController.ChangeSpeed(1.325f);
 
-            bezzCharacter.animationManagement.Play("Walk", 0.0f);
+            bezzCharacter.frameController.Play("Walk", 1.325f);
 
-            bezzCharacter.animationManagement.SetDefaultAnimation("Walk", 0.0f);
+            bezzCharacter.frameController.SetDefaultAnimation("Walk", 1.325f);
         }
 
         public override void PlayerInSight(PlayerManager playerManagement)
@@ -207,7 +209,7 @@ namespace BezzPack
 
             bezzCharacter.audioManagement.FlushQueue(true);
 
-            bezzCharacter.animationManagement.ChangeSpeed(1.0f);
+            bezzCharacter.frameController.ChangeSpeed(1.0f);
         }
     }
 
@@ -225,15 +227,9 @@ namespace BezzPack
         {
             this.playerManagement = playerManagement;
 
-            turnTimer = 0.5f;
-
             walkSpeedModifier = new ValueModifier(0.0f, 0.0f);
 
             runSpeedModifier = new ValueModifier(0.0f, 0.0f);
-
-            playerManagement.GetMovementStatModifier().AddModifier("walkSpeed", walkSpeedModifier);
-
-            playerManagement.GetMovementStatModifier().AddModifier("runSpeed", runSpeedModifier);
         }
 
         public override void Enter()
@@ -256,29 +252,37 @@ namespace BezzPack
 
                 playerManagement.itm.RemoveItem(Array.IndexOf(playerManagement.itm.items, brownies[UnityEngine.Random.Range(0, brownies.Length - 1)]));
 
-                bezzCharacter.animationManagement.ChangeSpeed(10.0f);
+                bezzCharacter.frameController.ChangeSpeed(10.0f);
 
-                bezzCharacter.animationManagement.Play("Eat", 0.0f);
+                bezzCharacter.frameController.Play("Eat", 10.0f);
 
-                bezzCharacter.animationManagement.SetDefaultAnimation("Eat", 0.0f);
+                bezzCharacter.frameController.SetDefaultAnimation("Eat", 10.0f);
+
+                Singleton<CoreGameManager>.Instance.AddPoints(50, 0, true);
             }
             else
             {
-                bezzCharacter.audioManagement.QueueAudio(bezzCharacter.bezzYapping0);
+                bezzCharacter.audioManagement.QueueAudio(bezzCharacter.bezzYapping[0]);
 
-                bezzCharacter.audioManagement.QueueAudio(bezzCharacter.bezzYapping1);
+                bezzCharacter.audioManagement.QueueAudio(bezzCharacter.bezzYapping[1]);
 
-                bezzCharacter.audioManagement.QueueAudio(bezzCharacter.bezzYapping2);
+                bezzCharacter.audioManagement.QueueAudio(bezzCharacter.bezzYapping[2]);
 
-                bezzCharacter.audioManagement.QueueAudio(bezzCharacter.bezzYapping3);
+                bezzCharacter.audioManagement.QueueAudio(bezzCharacter.bezzYapping[3]);
 
-                bezzCharacter.audioManagement.QueueAudio(bezzCharacter.bezzYapping4);
+                bezzCharacter.audioManagement.QueueAudio(bezzCharacter.bezzYapping[4]);
 
-                bezzCharacter.animationManagement.ChangeSpeed(10.0f);
+                bezzCharacter.frameController.ChangeSpeed(10.0f);
 
-                bezzCharacter.animationManagement.Play("Yap", 0.0f);
+                bezzCharacter.frameController.Play("Yap", 10.0f);
 
-                bezzCharacter.animationManagement.SetDefaultAnimation("Yap", 0.0f);
+                bezzCharacter.frameController.SetDefaultAnimation("Yap", 10.0f);
+
+                turnTimer = 0.5f;
+
+                playerManagement.GetMovementStatModifier().AddModifier("walkSpeed", walkSpeedModifier);
+
+                playerManagement.GetMovementStatModifier().AddModifier("runSpeed", runSpeedModifier);
             }
         }
 
@@ -288,29 +292,34 @@ namespace BezzPack
 
             if (bezzCharacter.audioManagement.QueuedAudioIsPlaying)
             {
-                if (Vector3.Distance(playerManagement.transform.position, bezzCharacter.transform.position) > 22.5f)
+                if (bezzCharacter.frameController.currentAnimationName == "Yap")
                 {
-                    bezzCharacter.behaviorStateMachine.ChangeState(new BezzRealizationState(bezzCharacter, playerManagement));
+                    if (Vector3.Distance(playerManagement.transform.position, bezzCharacter.transform.position) > 22.5f)
+                        bezzCharacter.behaviorStateMachine.ChangeState(new BezzRealizationState(bezzCharacter, playerManagement));
                 }
             }
             else
             {
-                Singleton<CoreGameManager>.Instance.AddPoints(100, 0, true);
+                if (bezzCharacter.frameController.currentAnimationName == "Yap")
+                    Singleton<CoreGameManager>.Instance.AddPoints(100, 0, true);
 
                 bezzCharacter.behaviorStateMachine.ChangeState(new BezzWanderState(bezzCharacter, 60.0f));
             }
 
-            if (turnTimer > 0.0f)
+            if (bezzCharacter.frameController.currentAnimationName == "Yap")
             {
-                playerManagement.transform.rotation = Quaternion.LookRotation(Vector3.RotateTowards(playerManagement.transform.forward.ZeroOutY(), (bezzCharacter.transform.position.ZeroOutY() - playerManagement.transform.position.ZeroOutY()).normalized, (Time.deltaTime * 2.25f) * MathF.PI, 0f), UnityEngine.Vector3.up);
+                if (turnTimer > 0.0f)
+                {
+                    playerManagement.transform.rotation = Quaternion.LookRotation(Vector3.RotateTowards(playerManagement.transform.forward.ZeroOutY(), (bezzCharacter.transform.position.ZeroOutY() - playerManagement.transform.position.ZeroOutY()).normalized, (Time.deltaTime * 2.25f) * MathF.PI, 0f), UnityEngine.Vector3.up);
 
-                turnTimer -= Time.deltaTime * bezzCharacter.TimeScale;
-            }
-            else
-            {
-                playerManagement.GetMovementStatModifier().RemoveModifier(walkSpeedModifier);
+                    turnTimer -= Time.deltaTime * bezzCharacter.TimeScale;
+                }
+                else
+                {
+                    playerManagement.GetMovementStatModifier().RemoveModifier(walkSpeedModifier);
 
-                playerManagement.GetMovementStatModifier().RemoveModifier(runSpeedModifier);
+                    playerManagement.GetMovementStatModifier().RemoveModifier(runSpeedModifier);
+                }
             }
         }
 
@@ -320,7 +329,7 @@ namespace BezzPack
 
             bezzCharacter.audioManagement.FlushQueue(true);
 
-            bezzCharacter.animationManagement.ChangeSpeed(1.0f);
+            bezzCharacter.frameController.ChangeSpeed(1.0f);
         }
     }
 
@@ -339,11 +348,11 @@ namespace BezzPack
 
             bezzCharacter.audioManagement.QueueAudio(bezzCharacter.bezzRealization0);
 
-            bezzCharacter.animationManagement.ChangeSpeed(1.0f);
+            bezzCharacter.frameController.ChangeSpeed(1.0f);
 
-            bezzCharacter.animationManagement.Play("Idle", 0.0f);
+            bezzCharacter.frameController.Play("Idle", 1.0f);
 
-            bezzCharacter.animationManagement.SetDefaultAnimation("Idle", 0.0f);
+            bezzCharacter.frameController.SetDefaultAnimation("Idle", 1.0f);
         }
 
         public override void Update()
@@ -360,7 +369,7 @@ namespace BezzPack
         {
             bezzCharacter.audioManagement.FlushQueue(true);
 
-            bezzCharacter.animationManagement.ChangeSpeed(1.0f);
+            bezzCharacter.frameController.ChangeSpeed(1.0f);
         }
     }
 
@@ -393,11 +402,11 @@ namespace BezzPack
 
             bezzCharacter.audioManagement.QueueAudio(bezzCharacter.bezzFurious0);
 
-            bezzCharacter.animationManagement.ChangeSpeed(1.0f);
+            bezzCharacter.frameController.ChangeSpeed(1.0f);
 
-            bezzCharacter.animationManagement.Play("Furious", 0.0f);
+            bezzCharacter.frameController.Play("Furious", 1.0f);
 
-            bezzCharacter.animationManagement.SetDefaultAnimation("Furious", 0.0f);
+            bezzCharacter.frameController.SetDefaultAnimation("Furious", 1.0f);
 
             for (int i = 0; i < bezzCharacter.ec.Npcs.Count; i++)
             {
@@ -443,9 +452,9 @@ namespace BezzPack
 
                 spriteRenderer.color = new Color(UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value, 1.0f);
 
-                CustomSpriteAnimator animationManagement = spriteRenderer.gameObject.AddComponent<CustomSpriteAnimator>();
+                CustomSpriteAnimator frameController = spriteRenderer.gameObject.AddComponent<CustomSpriteAnimator>();
 
-                animationManagement.spriteRenderer = spriteRenderer;
+                frameController.spriteRenderer = spriteRenderer;
 
                 List<Sprite> idleSprites = new List<Sprite>();
 
@@ -453,13 +462,13 @@ namespace BezzPack
 
                 idleSprites.Add(BasePlugin.current.assetManagement.Get<Sprite>("Flag1"));
 
-                animationManagement.animations.Add("Idle", new CustomAnimation<Sprite>(idleSprites.ToArray(), 1.0f));
+                frameController.animations.Add("Idle", new CustomAnimation<Sprite>(idleSprites.ToArray(), 1.0f));
 
-                animationManagement.ChangeSpeed(1.0f);
+                frameController.ChangeSpeed(1.0f);
 
-                animationManagement.Play("Idle", 0.0f);
+                frameController.Play("Idle", 1.0f);
 
-                animationManagement.SetDefaultAnimation("Idle", 0.0f);
+                frameController.SetDefaultAnimation("Idle", 1.0f);
 
                 spriteRenderer.gameObject.transform.localPosition += Vector3.up * 4.65f;
 
@@ -481,7 +490,7 @@ namespace BezzPack
 
             bezzCharacter.audioManagement.FlushQueue(true);
 
-            bezzCharacter.animationManagement.ChangeSpeed(1.0f);
+            bezzCharacter.frameController.ChangeSpeed(1.0f);
 
             for (int i = 0; i < flags.Count; i++)
             {
