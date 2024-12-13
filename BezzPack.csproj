@@ -58,13 +58,13 @@
       <HintPath>..\..\Baldi's Basics Plus\BepInEx\core\MonoMod.Utils.dll</HintPath>
     </Reference>
     <Reference Include="MTM101BaldAPI">
-      <HintPath>..\..\Baldi's Basics Plus\BepInEx\plugins\BB+ Dev API\MTM101BaldAPI.dll</HintPath>
+      <HintPath>..\..\Baldi's Basics Plus\BepInEx\plugins\MTM101BaldAPI.dll</HintPath>
     </Reference>
     <Reference Include="NavMeshComponents">
       <HintPath>..\..\Baldi's Basics Plus\BALDI_Data\Managed\NavMeshComponents.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json">
-      <HintPath>..\..\Baldi's Basics Plus\BepInEx\plugins\BB+ Dev API\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\..\Baldi's Basics Plus\BepInEx\plugins\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="Rewired_Core">
       <HintPath>..\..\Baldi's Basics Plus\BALDI_Data\Managed\Rewired_Core.dll</HintPath>

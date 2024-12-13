@@ -10,7 +10,7 @@ using UnityEngine;
 
 namespace BezzPack
 {
-    [BepInPlugin("detectivebaldi.pluspacks.bezz", "Bezz Pack", "1.2.0.0")]
+    [BepInPlugin("detectivebaldi.pluspacks.bezz", "Bezz Pack", "1.2.0.1")]
     [BepInDependency("mtm101.rulerp.bbplus.baldidevapi")]
     public class BasePlugin : BaseUnityPlugin
     {
@@ -40,10 +40,8 @@ namespace BezzPack
 
             assetManagement.Add<SoundObject>("BezzEat1", ObjectCreators.CreateSoundObject(AssetLoader.AudioClipFromMod(this, "BezzEat1.wav"), "BezzEat1", SoundType.Voice, new Color(1.0f, 0.5f, 0.0f, 1.0f)));
 
-            for (int i = 0; i < 5; i++)
-            {
+            for (int i = 0; i < 4; i++)
                 assetManagement.Add<SoundObject>("BezzYapping" + i, ObjectCreators.CreateSoundObject(AssetLoader.AudioClipFromMod(this, "BezzYapping" + i + ".wav"), "BezzYapping" + i, SoundType.Voice, new Color(1.0f, 0.5f, 0.0f, 1.0f)));
-            }
 
             assetManagement.Add<SoundObject>("BezzRealization0", ObjectCreators.CreateSoundObject(AssetLoader.AudioClipFromMod(this, "BezzRealization0.wav"), "BezzRealization0", SoundType.Voice, new Color(1.0f, 0.5f, 0.0f, 1.0f)));
 
@@ -52,16 +50,12 @@ namespace BezzPack
             assetManagement.Add<Sprite>("BezzIdle0", AssetLoader.SpriteFromTexture2D(AssetLoader.TextureFromMod(this, "BezzCharacter/BezzIdle0.png"), 31.5f));
 
             for (int i = 0; i < 12; i++)
-            {
                 assetManagement.Add<Sprite>("BezzWalk" + i, AssetLoader.SpriteFromTexture2D(AssetLoader.TextureFromMod(this, "BezzCharacter/BezzWalk" + i + ".png"), 31.5f));
-            }
 
             assetManagement.Add<Sprite>("BezzEat0", AssetLoader.SpriteFromTexture2D(AssetLoader.TextureFromMod(this, "BezzCharacter/BezzEat0.png"), 31.5f));
 
             for (int i = 0; i < 2; i++)
-            {
                 assetManagement.Add<Sprite>("BezzYap" + i, AssetLoader.SpriteFromTexture2D(AssetLoader.TextureFromMod(this, "BezzCharacter/BezzYap" + i + ".png"), 31.5f));
-            }
 
             assetManagement.Add<Sprite>("BezzFurious0", AssetLoader.SpriteFromTexture2D(AssetLoader.TextureFromMod(this, "BezzCharacter/BezzFurious0.png"), 31.5f));
 
@@ -114,7 +108,7 @@ namespace BezzPack
 
             bezzCharacter.bezzYapping = new SoundObject[5];
 
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < 4; i++)
                 bezzCharacter.bezzYapping[i] = assetManagement.Get<SoundObject>("BezzYapping" + i);
 
             bezzCharacter.bezzRealization0 = assetManagement.Get<SoundObject>("BezzRealization0");
@@ -155,15 +149,18 @@ namespace BezzPack
             assetManagement.Add<ItemObject>("Brownie", brownie);
         }
 
-        public void generateCallback(string lName, int lNumber, SceneObject lSceneObject)
+        public void generateCallback(string LName, int LNumber, SceneObject LSceneObject)
         {
-            lSceneObject.potentialNPCs.Add(new WeightedNPC() { selection = assetManagement.Get<NPC>("BezzCharacter"), weight = 115 });
+            if (LName.StartsWith("F"))
+            {
+                LSceneObject.potentialNPCs.Add(new WeightedNPC() {selection = assetManagement.Get<NPC>("BezzCharacter"), weight = 115});
 
-            lSceneObject.levelObject.potentialItems = lSceneObject.levelObject.potentialItems.AddItem(new WeightedItemObject() {selection = assetManagement.Get<ItemObject>("Brownie"), weight = 150}).ToArray();
+                LSceneObject.levelObject.potentialItems = LSceneObject.levelObject.potentialItems.AddItem(new WeightedItemObject() {selection = assetManagement.Get<ItemObject>("Brownie"), weight = 150}).ToArray();
 
-            lSceneObject.shopItems = lSceneObject.shopItems.AddItem(new WeightedItemObject() {selection = assetManagement.Get<ItemObject>("Brownie"), weight = 150}).ToArray();
+                LSceneObject.shopItems = LSceneObject.shopItems.AddItem(new WeightedItemObject() {selection = assetManagement.Get<ItemObject>("Brownie"), weight = 150}).ToArray();
 
-            lSceneObject.MarkAsNeverUnload();
+                LSceneObject.MarkAsNeverUnload();
+            }
         }
     }
 }
